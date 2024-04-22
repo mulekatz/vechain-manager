@@ -65,7 +65,7 @@ const Nfts = () => {
     <Card className="w-full">
       <CardHeader className="items-center">
         <CardTitle>NFTS</CardTitle>
-        {/*   <CardContent className="flex flex-wrap gap-1">
+        <CardContent className="flex flex-wrap gap-1">
           {isLoading ? (
             <Loading />
           ) : (
@@ -80,13 +80,13 @@ const Nfts = () => {
                   }
                   alt={metadata[index]?.image ?? nft._id}
                 />
-                <CardContent className="p-1">
+                {/*                 <CardContent className="p-1">
                   <p>{metadata[index].name}</p>
-                </CardContent>
+                </CardContent> */}
               </Card>
             ))
           )}
-        </CardContent> */}
+        </CardContent>
       </CardHeader>
     </Card>
   );
