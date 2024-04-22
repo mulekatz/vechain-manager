@@ -12,7 +12,7 @@ const Balance = ({
   return (
     <Card className="w-full">
       <CardHeader className="items-center">
-        <CardTitle>{vetBalance ? "VET" : "VTHO"} Balance</CardTitle>
+        <CardTitle>{vetBalance ? "VET" : "VTHO"}</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="flex w-full items-center justify-end gap-2">

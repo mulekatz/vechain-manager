@@ -62,9 +62,7 @@ export async function fetchNftMetadata(metadataUri: string) {
       throw new Error(`Failed to fetch metadata from ${metadataUri}`);
     }
     const data = await response.json();
-    // replace ipfs:// with https://ipfs.io/ipfs/ for images
     data.image = data.image.replace("ipfs://", "https://ipfs.io/ipfs/");
-    console.log("TESTdata", data);
     return data;
   }
   if (metadataUri.includes("https://")) {

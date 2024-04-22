@@ -65,11 +65,12 @@ const Nfts = () => {
     <Card className="w-full">
       <CardHeader className="items-center">
         <CardTitle>NFTS</CardTitle>
-        <CardContent className="flex flex-wrap gap-1">
+        {/*   <CardContent className="flex flex-wrap gap-1">
           {isLoading ? (
             <Loading />
           ) : (
             nfts &&
+            metadata &&
             nfts.map((nft, index) => (
               <Card key={index} className="overflow-hidden">
                 <img
@@ -85,7 +86,7 @@ const Nfts = () => {
               </Card>
             ))
           )}
-        </CardContent>
+        </CardContent> */}
       </CardHeader>
     </Card>
   );
