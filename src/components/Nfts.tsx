@@ -1,15 +1,17 @@
 import { useEffect, useState } from "react";
-import { BlockchainResult } from "@/types/types";
+import { BlockchainResult, NftMetadata } from "@/types/types";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { useWallet } from "@vechain/dapp-kit-react";
-import { nftList } from "@/lib/utils";
+import { fetchNftMetadata, nftList } from "@/lib/utils";
 import { useToast } from "./ui/use-toast";
+import Loading from "./Loading";
 
 const Nfts = () => {
   const { account } = useWallet();
   const { toast } = useToast();
-  const [nfts, setNfts] = useState<BlockchainResult["page"][]>([]);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [nfts, setNfts] = useState<BlockchainResult["page"]>([]);
+  const [metadata, setMetadata] = useState<NftMetadata[]>([]);
+  const [errorMessage, setErrorMessage] = useState("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   useEffect(() => {
@@ -17,35 +19,37 @@ const Nfts = () => {
       return;
     }
     setIsLoading(true);
-    const getNfts = async () => {
+    async function getNfts(address: string) {
       try {
-        const data = await nftList(account!);
-        sessionStorage.setItem(
-          "NftsCache",
-          JSON.stringify({
-            data,
-            lastUpdated: Date.now(),
-          })
-        );
+        const nfts = await nftList(address);
+        setNfts(nfts);
       } catch (err: any) {
-        setErrorMessage(err.message ?? "Could not fetch stakedNfts.");
+        setErrorMessage(err.message ?? "Failed to fetch NFTs from API.");
       } finally {
         setIsLoading(false);
-        console.log("NFTS", nfts);
       }
-    };
-    const cache = JSON.parse(sessionStorage.getItem("NftsCache") || "{}");
-    const lastUpdated = cache.lastUpdated;
-    if (
-      account &&
-      !isLoading &&
-      (!lastUpdated || Date.now() - lastUpdated > 30000)
-    ) {
-      getNfts();
-    } else if (account && cache.data) {
-      setNfts(cache.data);
     }
+    getNfts(account);
   }, [account]);
+
+  useEffect(() => {
+    if (!nfts) {
+      return;
+    }
+    setIsLoading(true);
+    nfts.map(async (nft) => {
+      try {
+        const data = await fetchNftMetadata(nft.metadataUri);
+        if (!data) {
+          return;
+        }
+        setMetadata((prev) => [...prev, data]);
+      } catch (err: any) {
+        setErrorMessage(err.message ?? "Failed to fetch metadata from API.");
+      }
+    });
+    setIsLoading(false);
+  }, [nfts]);
 
   useEffect(() => {
     if (errorMessage) {
@@ -55,13 +59,33 @@ const Nfts = () => {
         variant: "destructive",
       });
     }
-  }, [errorMessage]);
+  }, [errorMessage, toast]);
 
   return (
     <Card className="w-full">
       <CardHeader className="items-center">
         <CardTitle>NFTS</CardTitle>
-        <CardContent>{errorMessage && errorMessage}</CardContent>
+        <CardContent className="flex flex-wrap gap-1">
+          {isLoading ? (
+            <Loading />
+          ) : (
+            nfts &&
+            nfts.map((nft, index) => (
+              <Card key={index} className="overflow-hidden">
+                <img
+                  className="w-32"
+                  src={
+                    metadata[index]?.image ?? "https://via.placeholder.com/150"
+                  }
+                  alt={metadata[index]?.image ?? nft._id}
+                />
+                <CardContent className="p-1">
+                  <p>{metadata[index].name}</p>
+                </CardContent>
+              </Card>
+            ))
+          )}
+        </CardContent>
       </CardHeader>
     </Card>
   );

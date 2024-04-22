@@ -37,11 +37,43 @@ export async function nftList(address: string): Promise<
     updatedAt: string;
   }[]
 > {
-  try {
-    const data: BlockchainResult = await fetchNftsFromApi(address);
-    const nfts = data.page.flatMap((page) => page);
-    return nfts;
-  } catch (error) {
-    throw new Error("Could not fetch stakedNfts.");
+  const data: BlockchainResult = await fetchNftsFromApi(address);
+  if (!data.page) {
+    throw new Error("No NFTs found for this address.");
   }
+  const nfts = data.page.flatMap((page) => page);
+  return nfts;
+}
+
+export async function fetchNftMetadata(metadataUri: string) {
+  if (metadataUri.includes("ar://")) {
+    const arUri = metadataUri.replace("ar://", "https://arweave.net/");
+    const response = await fetch(arUri);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch metadata from ${metadataUri}`);
+    }
+    const data = await response.json();
+    return data;
+  }
+  if (metadataUri.includes("ipfs://")) {
+    const ipfsUri = metadataUri.replace("ipfs://", "https://ipfs.io/ipfs/");
+    const response = await fetch(ipfsUri);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch metadata from ${metadataUri}`);
+    }
+    const data = await response.json();
+    // replace ipfs:// with https://ipfs.io/ipfs/ for images
+    data.image = data.image.replace("ipfs://", "https://ipfs.io/ipfs/");
+    console.log("TESTdata", data);
+    return data;
+  }
+  if (metadataUri.includes("https://")) {
+    const response = await fetch(metadataUri);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch metadata from ${metadataUri}`);
+    }
+    const data = await response.json();
+    return data;
+  }
+  throw new Error(`Unsupported metadata URI: ${metadataUri}`);
 }

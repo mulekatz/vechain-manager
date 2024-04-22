@@ -71,8 +71,7 @@ export async function onRequest({
         "content-type": "application/json; charset=UTF-8",
       },
     });
-  } catch (err: any) {
-    console.error(err);
+  } catch (err) {
     return new Response(
       JSON.stringify({ errorMessage: err.shortMessage || err.message }),
       {

@@ -9,3 +9,8 @@ export type BlockchainResult = {
     updatedAt: string;
   }>;
 };
+
+export type NftMetadata = {
+  image: string;
+  name: string;
+};
