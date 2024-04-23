@@ -16,6 +16,8 @@ const Nfts = () => {
 
   useEffect(() => {
     if (!account) {
+      setNfts([]);
+      setMetadata([]);
       return;
     }
     setIsLoading(true);
@@ -37,18 +39,19 @@ const Nfts = () => {
       return;
     }
     setIsLoading(true);
-    nfts.map(async (nft) => {
-      try {
-        const data = await fetchNftMetadata(nft.metadataUri);
-        if (!data) {
-          return;
+    Promise.all(
+      nfts.map(async (nft) => {
+        try {
+          const data = await fetchNftMetadata(nft.metadataUri);
+          if (!data) {
+            return;
+          }
+          setMetadata((prev) => [...prev, data]);
+        } catch (err: any) {
+          setErrorMessage(err.message ?? "Failed to fetch metadata from API.");
         }
-        setMetadata((prev) => [...prev, data]);
-      } catch (err: any) {
-        setErrorMessage(err.message ?? "Failed to fetch metadata from API.");
-      }
-    });
-    setIsLoading(false);
+      })
+    ).finally(() => setIsLoading(false));
   }, [nfts]);
 
   useEffect(() => {
@@ -62,33 +65,34 @@ const Nfts = () => {
   }, [errorMessage, toast]);
 
   return (
-    <Card className="w-full">
-      <CardHeader className="items-center">
-        <CardTitle>NFTS</CardTitle>
-        <CardContent className="flex flex-wrap gap-1">
-          {isLoading ? (
-            <Loading />
-          ) : (
-            nfts &&
-            metadata &&
-            nfts.map((nft, index) => (
-              <Card key={index} className="overflow-hidden">
-                <img
-                  className="w-32"
-                  src={
-                    metadata[index]?.image ?? "https://via.placeholder.com/150"
-                  }
-                  alt={metadata[index]?.image ?? nft._id}
-                />
-                {/*                 <CardContent className="p-1">
-                  <p>{metadata[index].name}</p>
-                </CardContent> */}
-              </Card>
-            ))
-          )}
-        </CardContent>
-      </CardHeader>
-    </Card>
+    <>
+      {account && (
+        <Card className="w-full">
+          <CardHeader className="items-center">
+            <CardTitle>NFTS</CardTitle>
+            <CardContent className="flex flex-wrap gap-1">
+              {isLoading ? (
+                <Loading />
+              ) : (
+                metadata &&
+                metadata.map((metadata, index) => (
+                  <Card key={index} className="overflow-hidden">
+                    <img
+                      className="w-32"
+                      src={metadata.image ?? "https://via.placeholder.com/150"}
+                      alt={metadata.image ?? metadata.name}
+                    />
+                    <CardContent className="p-1">
+                      <p className="text-wrap">{metadata.name}</p>
+                    </CardContent>
+                  </Card>
+                ))
+              )}
+            </CardContent>
+          </CardHeader>
+        </Card>
+      )}
+    </>
   );
 };
 
