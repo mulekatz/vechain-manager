@@ -46,21 +46,19 @@ export async function nftList(address: string): Promise<
 }
 
 export async function fetchNftMetadata(metadataUri: string) {
-  const proxyUrl = "https://cors-anywhere.herokuapp.com/";
   if (metadataUri.includes("ar://")) {
     const arUri = metadataUri.replace("ar://", "https://arweave.net/");
-    const response = await fetch(proxyUrl + arUri);
+    const response = await fetch(arUri);
     if (!response.ok) {
       throw new Error(`Failed to fetch metadata from ${metadataUri}`);
     }
     const data = await response.json();
     data.image = data.image.replace("ar://", "https://arweave.net/");
-    console.log("ar: ", data);
     return data;
   }
   if (metadataUri.includes("ipfs://")) {
     const ipfsUri = metadataUri.replace("ipfs://", "https://ipfs.io/ipfs/");
-    const response = await fetch(proxyUrl + ipfsUri);
+    const response = await fetch(ipfsUri);
     if (!response.ok) {
       throw new Error(`Failed to fetch metadata from ${metadataUri}`);
     }
@@ -70,7 +68,7 @@ export async function fetchNftMetadata(metadataUri: string) {
     return data;
   }
   if (metadataUri.includes("https://")) {
-    const response = await fetch(proxyUrl + metadataUri);
+    const response = await fetch(metadataUri);
     if (!response.ok) {
       throw new Error(`Failed to fetch metadata from ${metadataUri}`);
     }

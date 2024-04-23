@@ -39,6 +39,7 @@ const Nfts = () => {
       return;
     }
     setIsLoading(true);
+    setMetadata([]); // Clear the metadata state
     Promise.all(
       nfts.map(async (nft) => {
         try {
@@ -74,14 +75,14 @@ const Nfts = () => {
               {isLoading ? (
                 <Loading />
               ) : (
-                <div className="grid grid-cols-2 md:grid-cols-4 2xl:grid-cols-8 lg:grid-cols-6 gap-2">
+                <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-2">
                   {metadata &&
                     metadata.map((metadata, index) => (
                       <Card
                         key={index}
                         className="overflow-hidden justify-between flex flex-col"
                       >
-                        <CardContent className="p-0 border-foreground border-b">
+                        <CardContent className="p-0">
                           <img
                             className="w-full"
                             src={
