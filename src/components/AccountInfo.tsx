@@ -42,14 +42,16 @@ const AccountInfo = () => {
   return (
     <>
       {!account ? (
-        <p>Please connect your wallet</p>
+        <div className="flex w-full items-center justify-center">
+          <p>Please connect your wallet</p>
+        </div>
       ) : isLoading ? (
         <Loading />
       ) : (
-        <>
+        <div className="flex w-full gap-1 h-fit">
           <Balance vetBalance={vetBalance} />
           <Balance vthoBalance={vthoBalance} />
-        </>
+        </div>
       )}
     </>
   );

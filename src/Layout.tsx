@@ -7,7 +7,7 @@ export default function Layout() {
   return (
     <>
       <DappKitContainer>
-        <main className="flex w-full justify-center p-1">
+        <main className="flex w-full min-h-screen justify-center p-1">
           <App />
         </main>
         <Toaster />

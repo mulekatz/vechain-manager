@@ -11,12 +11,15 @@ const Balance = ({
 }) => {
   return (
     <Card className="w-full">
-      <CardHeader className="items-center">
+      <CardHeader className="p-2">
         <CardTitle>{vetBalance ? "VET" : "VTHO"}</CardTitle>
       </CardHeader>
-      <CardContent>
-        <div className="flex w-full items-center justify-end gap-2">
-          <p className="text-end">{vetBalance ?? vthoBalance}</p>
+      <CardContent className="p-2">
+        <div className="flex w-full items-center gap-2">
+          <p className="text-end">
+            {vetBalance?.toLocaleString("en-US") ??
+              vthoBalance?.toLocaleString("en-US")}
+          </p>
           <img src={vetBalance ? VetLogo : VthoLogo} className="w-4 h-4" />
         </div>
       </CardContent>
