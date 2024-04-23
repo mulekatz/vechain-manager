@@ -14,3 +14,7 @@ export type NftMetadata = {
   image: string;
   name: string;
 };
+
+export type NftXMetadata = {
+  level: string;
+};

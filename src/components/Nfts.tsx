@@ -25,8 +25,12 @@ const Nfts = () => {
       try {
         const nfts = await nftList(address);
         setNfts(nfts);
-      } catch (err: any) {
-        setErrorMessage(err.message ?? "Failed to fetch NFTs from API.");
+      } catch (err) {
+        if (typeof err === "string") {
+          setErrorMessage(err);
+        } else if (err instanceof Error) {
+          setErrorMessage(err.message);
+        }
       } finally {
         setIsLoading(false);
       }
@@ -48,8 +52,12 @@ const Nfts = () => {
             return;
           }
           setMetadata((prev) => [...prev, data]);
-        } catch (err: any) {
-          setErrorMessage(err.message ?? "Failed to fetch metadata from API.");
+        } catch (err) {
+          if (typeof err === "string") {
+            setErrorMessage(err);
+          } else if (err instanceof Error) {
+            setErrorMessage(err.message);
+          }
         }
       })
     ).finally(() => setIsLoading(false));
