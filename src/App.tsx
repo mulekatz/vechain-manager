@@ -1,5 +1,6 @@
 import AccountInfo from "./components/AccountInfo";
 import Logo from "./components/Logo";
+import Nfts from "./components/Nfts";
 import WalletComponent from "./components/WalletComponent";
 
 function App() {
@@ -11,6 +12,9 @@ function App() {
       </section>
       <section className="flex w-full h-full">
         <AccountInfo />
+      </section>
+      <section className="flex w-full h-full">
+        <Nfts />
       </section>
     </div>
   );

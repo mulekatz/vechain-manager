@@ -53,9 +53,8 @@ export async function fetchNftMetadata(metadataUri: string) {
       throw new Error(`Failed to fetch metadata from ${metadataUri}`);
     }
     const data = await response.json();
-    console.log(data);
     data.image = data.image.replace("ar://", "https://arweave.net/");
-    console.log(data);
+    console.log("ar: ", data);
     return data;
   }
   if (metadataUri.includes("ipfs://")) {
@@ -66,6 +65,7 @@ export async function fetchNftMetadata(metadataUri: string) {
     }
     const data = await response.json();
     data.image = data.image.replace("ipfs://", "https://ipfs.io/ipfs/");
+    console.log("ipfs: ", data);
     return data;
   }
   if (metadataUri.includes("https://")) {
@@ -74,6 +74,7 @@ export async function fetchNftMetadata(metadataUri: string) {
       throw new Error(`Failed to fetch metadata from ${metadataUri}`);
     }
     const data = await response.json();
+    console.log("https: ", data);
     return data;
   }
   throw new Error(`Unsupported metadata URI: ${metadataUri}`);

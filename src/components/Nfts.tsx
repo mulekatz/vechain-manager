@@ -68,32 +68,35 @@ const Nfts = () => {
     <>
       {account && (
         <Card className="w-full">
-          <CardHeader className="items-center">
+          <CardHeader className="items-center p-1">
             <CardTitle>NFTS</CardTitle>
-            <CardContent className="flex flex-wrap gap-1">
+            <CardContent className="flex flex-wrap gap-1 p-1">
               {isLoading ? (
                 <Loading />
               ) : (
-                metadata &&
-                metadata.map((metadata, index) => (
-                  <Card
-                    key={index}
-                    className="overflow-hidden max-w-32 h-64 justify-between flex flex-col"
-                  >
-                    <CardContent className="p-0 border-foreground border-b">
-                      <img
-                        className="w-32"
-                        src={
-                          metadata.image ?? "https://via.placeholder.com/150"
-                        }
-                        alt={metadata.image ?? metadata.name}
-                      />
-                    </CardContent>
-                    <CardContent className="flex p-1 h-full bg-accent">
-                      <p className="text-wrap self-end">{metadata.name}</p>
-                    </CardContent>
-                  </Card>
-                ))
+                <div className="grid grid-cols-2 md:grid-cols-4 2xl:grid-cols-8 lg:grid-cols-6 gap-2">
+                  {metadata &&
+                    metadata.map((metadata, index) => (
+                      <Card
+                        key={index}
+                        className="overflow-hidden justify-between flex flex-col"
+                      >
+                        <CardContent className="p-0 border-foreground border-b">
+                          <img
+                            className="w-full"
+                            src={
+                              metadata.image ??
+                              "https://via.placeholder.com/150"
+                            }
+                            alt={metadata.image ?? metadata.name}
+                          />
+                        </CardContent>
+                        <CardContent className="flex p-1 h-full bg-accent">
+                          <p className="text-wrap self-end">{metadata.name}</p>
+                        </CardContent>
+                      </Card>
+                    ))}
+                </div>
               )}
             </CardContent>
           </CardHeader>
