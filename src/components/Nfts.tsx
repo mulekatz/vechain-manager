@@ -76,13 +76,13 @@ const Nfts = () => {
               ) : (
                 metadata &&
                 metadata.map((metadata, index) => (
-                  <Card key={index} className="overflow-hidden">
+                  <Card key={index} className="overflow-hidden max-w-32">
                     <img
                       className="w-32"
                       src={metadata.image ?? "https://via.placeholder.com/150"}
                       alt={metadata.image ?? metadata.name}
                     />
-                    <CardContent className="p-1">
+                    <CardContent className="h-full p-1 bg-accent">
                       <p className="text-wrap">{metadata.name}</p>
                     </CardContent>
                   </Card>

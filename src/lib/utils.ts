@@ -53,7 +53,9 @@ export async function fetchNftMetadata(metadataUri: string) {
       throw new Error(`Failed to fetch metadata from ${metadataUri}`);
     }
     const data = await response.json();
+    console.log(data);
     data.image = data.image.replace("ar://", "https://arweave.net/");
+    console.log(data);
     return data;
   }
   if (metadataUri.includes("ipfs://")) {

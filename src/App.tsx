@@ -6,9 +6,9 @@ import WalletComponent from "./components/WalletComponent";
 function App() {
   return (
     <div className="flex flex-col w-full gap-1">
-      <section className="flex w-full gap-1">
-        <Logo />
+      <section className="flex flex-col w-full gap-1">
         <WalletComponent />
+        <Logo />
       </section>
       <section className="flex w-full gap-1">
         <AccountInfo />
