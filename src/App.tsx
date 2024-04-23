@@ -10,10 +10,10 @@ function App() {
         <Logo />
         <WalletComponent />
       </section>
-      <section className="flex w-full h-full">
+      <section className="flex w-full">
         <AccountInfo />
       </section>
-      <section className="flex w-full h-full">
+      <section className="flex w-full">
         <Nfts />
       </section>
     </div>
