@@ -1,6 +1,5 @@
 import { useWalletModal } from "@vechain/dapp-kit-react";
 import { useWallet } from "@vechain/dapp-kit-react";
-import { useWalletName } from "@/hooks/useWalletName";
 import { WalletButton } from "@vechain/dapp-kit-react";
 import { Button } from "@/components/ui/button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -30,19 +29,12 @@ export function DisconnectButton({
   mobile?: boolean;
 }) {
   const wallet = useWallet();
-  const { name } = useWalletName(wallet.account);
 
   return (
     <WalletButton
       className={className}
       mobile={mobile}
-      address={
-        name
-          ? name.length <= 8
-            ? name.replace(".vet", " .vet")
-            : name
-          : wallet.account || undefined // Add null check
-      }
+      address={wallet.account || undefined}
     />
   );
 }
