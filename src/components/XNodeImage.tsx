@@ -13,11 +13,11 @@ const xNodeLevel = [
 const XNodeImage = ({ level }: { level: string }) => (
   <div className="flex w-full gap-2 items-center justify-center">
     <img
-      src={xNodeLevel[Number(level) - 1].image}
-      alt={xNodeLevel[Number(level) - 1].alt}
+      src={xNodeLevel[Number(level) - 1]?.image}
+      alt={xNodeLevel[Number(level) - 1]?.alt}
       className="w-6"
     />
-    <p>{xNodeLevel[Number(level) - 1].version}</p>
+    <p>{xNodeLevel[Number(level) - 1]?.version}</p>
   </div>
 );
 
