@@ -26,6 +26,7 @@ const Nfts = () => {
         const nfts = await nftList(address);
         setNfts(nfts);
       } catch (err) {
+        console.error("!");
         if (typeof err === "string") {
           setErrorMessage(err);
         } else if (err instanceof Error) {
@@ -53,6 +54,7 @@ const Nfts = () => {
           }
           setMetadata((prev) => [...prev, data]);
         } catch (err) {
+          console.error("!");
           if (typeof err === "string") {
             setErrorMessage(err);
           } else if (err instanceof Error) {
@@ -66,9 +68,9 @@ const Nfts = () => {
   useEffect(() => {
     if (errorMessage) {
       toast({
-        title: "Error",
-        description: errorMessage,
         variant: "destructive",
+        title: "Error!",
+        description: errorMessage,
       });
     }
   }, [errorMessage, toast]);

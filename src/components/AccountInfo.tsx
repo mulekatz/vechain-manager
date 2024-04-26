@@ -1,8 +1,9 @@
 import { useConnex, useWallet } from "@vechain/dapp-kit-react";
 import { useEffect, useState } from "react";
 import { useToast } from "./ui/use-toast";
-import Loading from "./Loading";
 import Balance from "./Balance";
+import PleaseConnect from "./PleaseConnect";
+import Xnode from "./Xnode";
 
 const AccountInfo = () => {
   const connex = useConnex();
@@ -14,10 +15,10 @@ const AccountInfo = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   useEffect(() => {
-    setIsLoading(true);
     if (!connex || !account) {
       return;
     }
+    setIsLoading(true);
     connex.thor
       .account(account)
       .get()
@@ -27,30 +28,35 @@ const AccountInfo = () => {
         setIsLoading(false);
       })
       .catch((err: Error) => {
-        setErrorMessage(err.message ?? "Could not load Account info.");
+        if (typeof err === "string") {
+          setErrorMessage(err);
+        } else if (err instanceof Error) {
+          setErrorMessage(err.message);
+        }
       });
   }, [connex, account]);
 
   useEffect(() => {
-    toast({
-      variant: "destructive",
-      title: "Error!",
-      description: errorMessage,
-    });
+    if (errorMessage) {
+      toast({
+        variant: "destructive",
+        title: "Error!",
+        description: errorMessage,
+      });
+    }
   }, [errorMessage, toast]);
 
   return (
     <>
       {!account ? (
-        <div className="flex w-full items-center justify-center">
-          <p>Please connect your wallet</p>
-        </div>
-      ) : isLoading ? (
-        <Loading />
+        <PleaseConnect />
       ) : (
-        <div className="flex w-full gap-1 h-fit">
-          <Balance vetBalance={vetBalance} />
-          <Balance vthoBalance={vthoBalance} />
+        <div className="flex flex-col gap-1">
+          <Xnode />
+          <div className="flex w-full gap-1 h-fit">
+            <Balance vetBalance={vetBalance} isLoading={isLoading} />
+            <Balance vthoBalance={vthoBalance} isLoading={isLoading} />
+          </div>
         </div>
       )}
     </>

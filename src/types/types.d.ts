@@ -18,3 +18,38 @@ export type NftMetadata = {
 export type NftXMetadata = {
   level: string;
 };
+
+export type TickerHead = {
+  id: string;
+  number: number;
+  parentID: string;
+  timestamp: number;
+  txsFeatures: number;
+  gasLimit: number;
+};
+
+export type Block = {
+  number: number;
+  id: string;
+  size: number;
+  parentID: string;
+  timestamp: number;
+  gasLimit: number;
+  beneficiary: string;
+  gasUsed: number;
+  totalScore: number;
+  txsRoot: string;
+  stateRoot: string;
+  receiptsRoot: string;
+  signer: string;
+  isTrunk: boolean;
+  transactions: Array<{
+    origin: string;
+    gas: number;
+    gasPriceCoef: number;
+    nonce: number;
+    dependsOn: string;
+    size: number;
+    clauses: [];
+  }>;
+};

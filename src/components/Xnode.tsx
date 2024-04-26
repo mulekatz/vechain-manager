@@ -5,6 +5,7 @@ import Loading from "./Loading";
 import { X_CONTRACT_ADDRESS } from "@/config";
 import { NftXMetadata } from "@/types/types";
 import XNodeImage from "./XNodeImage";
+import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 
 const abiIsX = {
   constant: true,
@@ -116,12 +117,12 @@ const Xnode = () => {
   useEffect(() => {
     if (!account || !connex) return;
     setIsLoading(true);
-    setErrorMessage(null); // Reset the error state
     const fetchData = async () => {
       try {
         await isXFunction();
         setMetadata(await metaByTokenId(await tokenIdByAddress()));
       } catch (err) {
+        console.error("!");
         if (typeof err === "string") {
           setErrorMessage(err);
         } else if (err instanceof Error) {
@@ -136,20 +137,31 @@ const Xnode = () => {
   }, [account, connex]);
 
   useEffect(() => {
-    toast({
-      variant: "destructive",
-      title: "Error!",
-      description: errorMessage,
-    });
+    if (errorMessage) {
+      toast({
+        variant: "destructive",
+        title: "Error!",
+        description: errorMessage,
+      });
+    }
   }, [errorMessage, toast]);
 
+  if (!xNode) {
+    return null;
+  }
+
   return (
-    <>
-      {isLoading && <Loading />}
-      {!isLoading && account && xNode && metadata && (
-        <XNodeImage level={metadata.level} />
-      )}
-    </>
+    <Card>
+      <CardHeader className="items-center justify-center gap-1 p-2">
+        <CardTitle className="text-center">NODE STATUS</CardTitle>
+      </CardHeader>
+      <CardContent className="p-2">
+        {isLoading && <Loading />}
+        {!isLoading && account && xNode && metadata && (
+          <XNodeImage level={metadata.level} />
+        )}
+      </CardContent>
+    </Card>
   );
 };
 
