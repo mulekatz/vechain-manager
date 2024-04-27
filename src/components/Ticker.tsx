@@ -15,21 +15,24 @@ const Ticker = () => {
   const ticker = connex.thor.ticker();
 
   useEffect(() => {
-    let isMounted = true;
     setIsLoading(true);
+  }, []);
+
+  useEffect(() => {
+    let isMounted = true;
     try {
-      ticker
-        .next()
-        .then((head: TickerHead) => {
-          if (isMounted) {
-            setTickerHead(head);
+      ticker.next().then((head: TickerHead) => {
+        if (isMounted) {
+          if (head) {
+            const blk = connex.thor.block(head.id);
+            blk.get().then((block: Block) => {
+              setTickerHead(head);
+              setBlockInfo(block);
+              setIsLoading(false);
+            });
           }
-        })
-        .finally(() => {
-          if (isMounted) {
-            setIsLoading(false);
-          }
-        });
+        }
+      });
     } catch (err) {
       if (isMounted) {
         if (typeof err === "string") {
@@ -39,35 +42,10 @@ const Ticker = () => {
         }
       }
     }
-
     return () => {
       isMounted = false;
     };
   }, [connex, ticker]);
-
-  useEffect(() => {
-    if (!connex || !tickerHead) {
-      return;
-    }
-    setIsLoading(true);
-    const blk = connex.thor.block(tickerHead?.id || 0);
-    try {
-      blk
-        .get()
-        .then((block: Block) => {
-          setBlockInfo(block);
-        })
-        .finally(() => {
-          setIsLoading(false);
-        });
-    } catch (err) {
-      if (typeof err === "string") {
-        setErrorMessage(err);
-      } else if (err instanceof Error) {
-        setErrorMessage(err.message);
-      }
-    }
-  }, [connex, tickerHead]);
 
   useEffect(() => {
     if (errorMessage) {
@@ -86,7 +64,7 @@ const Ticker = () => {
           <CardTitle className="text-center">BLOCK</CardTitle>
         </CardHeader>
         <CardContent className="p-2">
-          {isLoading ? (
+          {!isLoading ? (
             <p className="text-2xl font-thin text-center">
               {tickerHead?.number.toLocaleString("en-US")}
             </p>
@@ -100,9 +78,9 @@ const Ticker = () => {
           <CardTitle className="text-center">TXs</CardTitle>
         </CardHeader>
         <CardContent className="p-2">
-          {isLoading && tickerHead?.id !== "0" ? (
+          {!isLoading && tickerHead?.id !== "0" ? (
             <p className="text-2xl font-thin text-center">
-              {blockInfo?.transactions.length || 0}
+              {blockInfo?.transactions.length}
             </p>
           ) : (
             <Loading />
